@@ -1,0 +1,13 @@
+# Groups
+@@@Backend @"Juan Pablo Araya" @"Hjalte Thor" @"Jannik Neerdal" @"Kasper Bonfils" @"Mark Helmundt Kevings" @"Rasmus Løje" @"Roland Beta" @"Jannik Larsen"
+
+# Define how many people of the Backend group needs to approve a 
+# PR before it can be merged.
+Check(@@Backend >= 1)
+
+# Default reviewers
+# Any rows below this one takes precedence
+*   @@Backend
+
+
+

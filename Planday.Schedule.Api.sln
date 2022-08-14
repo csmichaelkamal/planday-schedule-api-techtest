@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planday.Schedule.Api", "Planday.Schedule.Api\Planday.Schedule.Api.csproj", "{93730D8E-29C3-43EC-981C-AE0270DCD78D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planday.Schedule", "Planday.Schedule\Planday.Schedule.csproj", "{3338A09F-BAAD-4CC5-86EF-FA13DAF2458F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planday.Schedule.Infrastructure", "Planday.Schedule.Infrastructure\Planday.Schedule.Infrastructure.csproj", "{55B3AB9E-33D3-4404-BC61-0DD805A8169F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{93730D8E-29C3-43EC-981C-AE0270DCD78D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93730D8E-29C3-43EC-981C-AE0270DCD78D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93730D8E-29C3-43EC-981C-AE0270DCD78D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93730D8E-29C3-43EC-981C-AE0270DCD78D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3338A09F-BAAD-4CC5-86EF-FA13DAF2458F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3338A09F-BAAD-4CC5-86EF-FA13DAF2458F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3338A09F-BAAD-4CC5-86EF-FA13DAF2458F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3338A09F-BAAD-4CC5-86EF-FA13DAF2458F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55B3AB9E-33D3-4404-BC61-0DD805A8169F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55B3AB9E-33D3-4404-BC61-0DD805A8169F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55B3AB9E-33D3-4404-BC61-0DD805A8169F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55B3AB9E-33D3-4404-BC61-0DD805A8169F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
