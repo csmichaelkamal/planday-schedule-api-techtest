@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Planday.Schedule.Queries
+﻿namespace Planday.Schedule.Queries
 {
     public interface IGetAllShiftsQuery
     {

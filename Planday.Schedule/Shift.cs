@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Planday.Schedule
+﻿namespace Planday.Schedule
 {
     public class Shift
     {
