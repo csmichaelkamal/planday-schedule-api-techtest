@@ -7,7 +7,11 @@ namespace Planday.Schedule.Infrastructure.Queries
 {
     public class GetShiftByIdQuery : IGetShiftByIdQuery
     {
+        #region Private Members
+
         private readonly IConnectionStringProvider _connectionStringProvider;
+
+        #endregion
 
         #region Ctor
 
@@ -24,7 +28,7 @@ namespace Planday.Schedule.Infrastructure.Queries
         {
             await using var sqlConnection = new SQLiteConnection(_connectionStringProvider.GetConnectiongString());
 
-            var idParam = new { Id = id};
+            var idParam = new { Id = id };
 
             var shiftDto = await sqlConnection.QueryFirstOrDefaultAsync<ShiftDto>(Sql, idParam);
 

@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using Planday.Schedule.Infrastructure.Providers.Interfaces;
 using System.Text.RegularExpressions;
-using Planday.Schedule.Infrastructure.Providers.Interfaces;
 
 namespace Planday.Schedule.Infrastructure.Providers
 {

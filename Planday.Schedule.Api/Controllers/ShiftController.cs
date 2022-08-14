@@ -1,30 +1,39 @@
 using Microsoft.AspNetCore.Mvc;
+using Planday.Schedule.Api.Models.Request;
+using Planday.Schedule.Commands;
 using Planday.Schedule.Infrastructure.Responses;
 using Planday.Schedule.Queries;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace Planday.Schedule.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ShiftController : ControllerBase
     {
         #region Members
 
         private readonly IGetShiftByIdQuery _getShiftByIdQuery;
+        private readonly ICreateOpenShiftCommand _createOpenShiftCommand;
 
         #endregion
 
         #region Ctor
 
-        public ShiftController(IGetShiftByIdQuery getShiftByIdQuery)
+        public ShiftController(IGetShiftByIdQuery getShiftByIdQuery,
+            ICreateOpenShiftCommand createOpenShiftCommand)
         {
             _getShiftByIdQuery = getShiftByIdQuery;
+            _createOpenShiftCommand = createOpenShiftCommand;
         }
 
         #endregion
 
         #region Public End-Points
+
+        #region Get Shift By Id
+
 
         /// <summary>
         /// Get Shift by Id
@@ -34,7 +43,6 @@ namespace Planday.Schedule.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Shift), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(NotFoundResponse), (int)HttpStatusCode.NotFound)]
-        [ProducesErrorResponseType(typeof(HttpStatusCode))]
         public async Task<IActionResult> GetShiftById(long id)
         {
             var shift = await _getShiftByIdQuery.QueryAsync(id);
@@ -43,7 +51,8 @@ namespace Planday.Schedule.Api.Controllers
             {
                 // logger Error into the logger
 
-                return NotFound(new NotFoundResponse {
+                return NotFound(new NotFoundResponse
+                {
                     StatusCode = (int)HttpStatusCode.NotFound,
                     ErrorMessage = $"Couldn't find a shift with Id {id}"
                 });
@@ -51,6 +60,34 @@ namespace Planday.Schedule.Api.Controllers
 
             return Ok(shift);
         }
+
+        #endregion
+
+        #region Add Open Shift
+
+        /// <summary>
+        /// Add An Open Shift, An open shift is a Shift without an employee assigned
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>If the Open Shift created successfully, returns HTTP Status Code Created (201), otherwise returns Bad Request (400)</returns>
+        [HttpPost]
+        [ProducesResponseType(typeof(int), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> CreateOpenShift(OpenShiftRequestModel openShiftRequestModel)
+        {
+            var insertedId = await _createOpenShiftCommand.CreateOpenShiftAsync(openShiftRequestModel.StartDate,
+                openShiftRequestModel.EndDate);
+
+            if (insertedId is 0)
+            {
+                // logger Error into the logger
+                return BadRequest();
+            }
+
+            return CreatedAtAction(nameof(GetShiftById), new { id = insertedId }, insertedId);
+        }
+
+        #endregion
 
         #endregion
     }

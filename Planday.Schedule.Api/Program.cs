@@ -1,3 +1,5 @@
+using Planday.Schedule.Commands;
+using Planday.Schedule.Infrastructure.Commands;
 using Planday.Schedule.Infrastructure.Providers;
 using Planday.Schedule.Infrastructure.Providers.Interfaces;
 using Planday.Schedule.Infrastructure.Queries;
@@ -14,8 +16,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IConnectionStringProvider>(new ConnectionStringProvider(builder.Configuration.GetConnectionString("Database")));
 // builder.Services.AddScoped(config => new ShiftQueryBase(config.GetService<IConnectionStringProvider>()));
+
+// Register Queries
 builder.Services.AddScoped<IGetAllShiftsQuery, GetAllShiftsQuery>();
 builder.Services.AddScoped<IGetShiftByIdQuery, GetShiftByIdQuery>();
+
+// Register Commands
+builder.Services.AddScoped<ICreateOpenShiftCommand, CreateOpenShiftCommand>();
 
 #endregion
 
