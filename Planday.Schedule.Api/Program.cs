@@ -20,9 +20,12 @@ builder.Services.AddSingleton<IConnectionStringProvider>(new ConnectionStringPro
 // Register Queries
 builder.Services.AddScoped<IGetAllShiftsQuery, GetAllShiftsQuery>();
 builder.Services.AddScoped<IGetShiftByIdQuery, GetShiftByIdQuery>();
+builder.Services.AddScoped<IGetEmployeeByIdQuery, GetEmployeeByIdQuery>();
+builder.Services.AddScoped<IGetEmployeeShiftQuery, GetEmployeeShiftQuery>();
 
 // Register Commands
 builder.Services.AddScoped<ICreateOpenShiftCommand, CreateOpenShiftCommand>();
+builder.Services.AddScoped<IAssignShiftToEmployeeCommand, AssignShiftToEmployeeCommand>();
 
 #endregion
 

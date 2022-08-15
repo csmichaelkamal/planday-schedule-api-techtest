@@ -52,9 +52,7 @@ namespace Planday.Schedule.Infrastructure.Queries
 
         private record ShiftDto(long Id, long? EmployeeId, string Start, string End);
 
-        private const string Sql = @$"SELECT Id, EmployeeId, Start, End
-                                    FROM Shift
-                                    WHERE Id = @Id";
+        private const string Sql = @"SELECT Id, EmployeeId, Start, End FROM Shift WHERE Id = @Id";
 
         #endregion
     }

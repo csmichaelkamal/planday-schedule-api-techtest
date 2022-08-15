@@ -3,7 +3,6 @@ using Planday.Schedule.Api.Models.Request;
 using Planday.Schedule.Commands;
 using Planday.Schedule.Infrastructure.Responses;
 using Planday.Schedule.Queries;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace Planday.Schedule.Api.Controllers
@@ -16,16 +15,19 @@ namespace Planday.Schedule.Api.Controllers
 
         private readonly IGetShiftByIdQuery _getShiftByIdQuery;
         private readonly ICreateOpenShiftCommand _createOpenShiftCommand;
+        private readonly IAssignShiftToEmployeeCommand _assignShiftToEmployeeCommand;
 
         #endregion
 
         #region Ctor
 
         public ShiftController(IGetShiftByIdQuery getShiftByIdQuery,
-            ICreateOpenShiftCommand createOpenShiftCommand)
+            ICreateOpenShiftCommand createOpenShiftCommand,
+            IAssignShiftToEmployeeCommand assignShiftToEmployeeCommand)
         {
             _getShiftByIdQuery = getShiftByIdQuery;
             _createOpenShiftCommand = createOpenShiftCommand;
+            _assignShiftToEmployeeCommand = assignShiftToEmployeeCommand;
         }
 
         #endregion
@@ -33,7 +35,6 @@ namespace Planday.Schedule.Api.Controllers
         #region Public End-Points
 
         #region Get Shift By Id
-
 
         /// <summary>
         /// Get Shift by Id
@@ -70,7 +71,7 @@ namespace Planday.Schedule.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns>If the Open Shift created successfully, returns HTTP Status Code Created (201), otherwise returns Bad Request (400)</returns>
-        [HttpPost]
+        [HttpPost("openshift")]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateOpenShift(OpenShiftRequestModel openShiftRequestModel)
@@ -85,6 +86,28 @@ namespace Planday.Schedule.Api.Controllers
             }
 
             return CreatedAtAction(nameof(GetShiftById), new { id = insertedId }, insertedId);
+        }
+
+        #endregion
+
+        #region Assign A Shift to an Employee
+
+        [HttpPost("assign")]
+        [ProducesResponseType(typeof(int), (int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> AssignShiftToEmployee(AssignShiftToEmployeeRequestModel assignShiftToEmployeeRequestModel)
+        {
+            var assingStatus = await _assignShiftToEmployeeCommand.
+                AssignShiftToEmployeeAsync(assignShiftToEmployeeRequestModel.ShiftId, assignShiftToEmployeeRequestModel.EmployeeId);
+
+            if (!assingStatus)
+            {
+                // logger Error into the logger
+                // Cannot Assign the Shift with Id = ShiftId to the Employee with Id = EmployeeId
+                return BadRequest();
+            }
+
+            return NoContent();
         }
 
         #endregion
