@@ -1,10 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planday.Schedule.Api", "Planday.Schedule.Api\Planday.Schedule.Api.csproj", "{93730D8E-29C3-43EC-981C-AE0270DCD78D}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planday.Schedule.Api", "Planday.Schedule.Api\Planday.Schedule.Api.csproj", "{93730D8E-29C3-43EC-981C-AE0270DCD78D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planday.Schedule", "Planday.Schedule\Planday.Schedule.csproj", "{3338A09F-BAAD-4CC5-86EF-FA13DAF2458F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planday.Schedule", "Planday.Schedule\Planday.Schedule.csproj", "{3338A09F-BAAD-4CC5-86EF-FA13DAF2458F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planday.Schedule.Infrastructure", "Planday.Schedule.Infrastructure\Planday.Schedule.Infrastructure.csproj", "{55B3AB9E-33D3-4404-BC61-0DD805A8169F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planday.Schedule.Infrastructure", "Planday.Schedule.Infrastructure\Planday.Schedule.Infrastructure.csproj", "{55B3AB9E-33D3-4404-BC61-0DD805A8169F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9E58A92D-B287-491F-98A6-EAF7E7036E6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planday.Schedule.Infrastructure.Tests", "Planday.Schedule.Infrastructure.Tests\Planday.Schedule.Infrastructure.Tests.csproj", "{20C3557B-CD1B-49C9-AE8C-971BEC9DB4BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +31,18 @@ Global
 		{55B3AB9E-33D3-4404-BC61-0DD805A8169F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55B3AB9E-33D3-4404-BC61-0DD805A8169F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55B3AB9E-33D3-4404-BC61-0DD805A8169F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20C3557B-CD1B-49C9-AE8C-971BEC9DB4BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C3557B-CD1B-49C9-AE8C-971BEC9DB4BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C3557B-CD1B-49C9-AE8C-971BEC9DB4BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C3557B-CD1B-49C9-AE8C-971BEC9DB4BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{20C3557B-CD1B-49C9-AE8C-971BEC9DB4BE} = {9E58A92D-B287-491F-98A6-EAF7E7036E6B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4CE378F2-F2F3-4102-8EA6-851633A3473B}
 	EndGlobalSection
 EndGlobal
