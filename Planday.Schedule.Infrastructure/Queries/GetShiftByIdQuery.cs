@@ -1,23 +1,26 @@
 ﻿using Dapper;
+using Planday.Schedule.Infrastructure.Factories.Interfaces;
 using Planday.Schedule.Infrastructure.Providers.Interfaces;
 using Planday.Schedule.Queries;
-using System.Data.SQLite;
 
 namespace Planday.Schedule.Infrastructure.Queries
 {
-    public class GetShiftByIdQuery : IGetShiftByIdQuery
+    public class GetShiftByIdQuery : ShiftQueryBase, IGetShiftByIdQuery
     {
         #region Private Members
 
-        private readonly IConnectionStringProvider _connectionStringProvider;
+        private readonly IConnectionStringProvider connectionStringProvider;
+        private readonly ISqliteConnectionFactory sqliteConnectionFactory;
 
         #endregion
 
         #region Ctor
 
-        public GetShiftByIdQuery(IConnectionStringProvider connectionStringProvider)
+        public GetShiftByIdQuery(IConnectionStringProvider connectionStringProvider,
+            ISqliteConnectionFactory sqliteConnectionFactory)
         {
-            _connectionStringProvider = connectionStringProvider;
+            this.connectionStringProvider = connectionStringProvider;
+            this.sqliteConnectionFactory = sqliteConnectionFactory;
         }
 
         #endregion
@@ -26,7 +29,7 @@ namespace Planday.Schedule.Infrastructure.Queries
 
         public async Task<Shift?> QueryAsync(long id)
         {
-            await using var sqlConnection = new SQLiteConnection(_connectionStringProvider.GetConnectiongString());
+            using var sqlConnection =  sqliteConnectionFactory.GetSqliteConnection(connectionStringProvider.GetConnectiongString());
 
             var idParam = new { Id = id };
 
@@ -48,9 +51,7 @@ namespace Planday.Schedule.Infrastructure.Queries
 
         #endregion
 
-        #region Private
-
-        private record ShiftDto(long Id, long? EmployeeId, string Start, string End);
+        #region SQL Queries 
 
         private const string Sql = @"SELECT Id, EmployeeId, Start, End FROM Shift WHERE Id = @Id";
 

@@ -1,5 +1,7 @@
 using Planday.Schedule.Commands;
 using Planday.Schedule.Infrastructure.Commands;
+using Planday.Schedule.Infrastructure.Factories;
+using Planday.Schedule.Infrastructure.Factories.Interfaces;
 using Planday.Schedule.Infrastructure.Providers;
 using Planday.Schedule.Infrastructure.Providers.Interfaces;
 using Planday.Schedule.Infrastructure.Queries;
@@ -15,6 +17,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IConnectionStringProvider>(new ConnectionStringProvider(builder.Configuration.GetConnectionString("Database")));
+
+builder.Services.AddScoped<ISqliteConnectionFactory, SqliteConnectionFactory>();
 // builder.Services.AddScoped(config => new ShiftQueryBase(config.GetService<IConnectionStringProvider>()));
 
 // Register Queries

@@ -1,5 +1,4 @@
-﻿using Dapper;
-using Planday.Schedule.Commands;
+﻿using Planday.Schedule.Commands;
 using Planday.Schedule.Infrastructure.Providers.Interfaces;
 using Planday.Schedule.Queries;
 using System.Data.Common;

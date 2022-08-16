@@ -1,24 +1,26 @@
 ﻿using Dapper;
+using Planday.Schedule.Infrastructure.Factories.Interfaces;
 using Planday.Schedule.Infrastructure.Providers.Interfaces;
 using Planday.Schedule.Queries;
-using System.Data.SQLite;
 
 namespace Planday.Schedule.Infrastructure.Queries
 {
-    public class GetEmployeeShiftQuery : IGetEmployeeShiftQuery
+    public class GetEmployeeShiftQuery : ShiftQueryBase, IGetEmployeeShiftQuery
     {
         #region Private Members
 
-        private readonly IConnectionStringProvider _connectionStringProvider;
-        private long id;
+        private readonly IConnectionStringProvider connectionStringProvider;
+        private readonly ISqliteConnectionFactory sqliteConnectionFactory;
 
         #endregion
 
         #region Ctor
 
-        public GetEmployeeShiftQuery(IConnectionStringProvider connectionStringProvider)
+        public GetEmployeeShiftQuery(IConnectionStringProvider connectionStringProvider,
+            ISqliteConnectionFactory sqliteConnectionFactory)
         {
-            _connectionStringProvider = connectionStringProvider;
+            this.connectionStringProvider = connectionStringProvider;
+            this.sqliteConnectionFactory = sqliteConnectionFactory;
         }
 
         #endregion
@@ -27,7 +29,7 @@ namespace Planday.Schedule.Infrastructure.Queries
 
         public async Task<Shift?> QueryAsync(long employeeId, string startDateTime)
         {
-            using var sqlConnection = new SQLiteConnection(_connectionStringProvider.GetConnectiongString());
+            using var sqlConnection = sqliteConnectionFactory.GetSqliteConnection(connectionStringProvider.GetConnectiongString());
 
             var queryParams = new { EmployeeId = employeeId, Start = startDateTime[..11] };
 
@@ -40,17 +42,11 @@ namespace Planday.Schedule.Infrastructure.Queries
                 return null;
             }
 
-            return new Shift(id = shiftDto.Id,
-                             employeeId = shiftDto.EmployeeId ?? default,
+            return new Shift(shiftDto.Id,
+                             shiftDto.EmployeeId ?? default,
                              DateTime.Parse(shiftDto.Start),
                              DateTime.Parse(shiftDto.End));
         }
-
-        #endregion
-
-        #region DTOs
-
-        private record ShiftDto(long Id, long? EmployeeId, string Start, string End);
 
         #endregion
 

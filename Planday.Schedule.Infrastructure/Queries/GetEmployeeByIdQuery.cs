@@ -1,7 +1,7 @@
 ﻿using Dapper;
+using Planday.Schedule.Infrastructure.Factories.Interfaces;
 using Planday.Schedule.Infrastructure.Providers.Interfaces;
 using Planday.Schedule.Queries;
-using System.Data.SQLite;
 
 namespace Planday.Schedule.Infrastructure.Queries
 {
@@ -9,15 +9,18 @@ namespace Planday.Schedule.Infrastructure.Queries
     {
         #region Private Members
 
-        private readonly IConnectionStringProvider _connectionStringProvider;
+        private readonly IConnectionStringProvider connectionStringProvider;
+        private readonly ISqliteConnectionFactory sqliteConnectionFactory;
 
         #endregion
 
         #region Ctor
 
-        public GetEmployeeByIdQuery(IConnectionStringProvider connectionStringProvider)
+        public GetEmployeeByIdQuery(IConnectionStringProvider connectionStringProvider,
+            ISqliteConnectionFactory sqliteConnectionFactory)
         {
-            _connectionStringProvider = connectionStringProvider;
+            this.connectionStringProvider = connectionStringProvider;
+            this.sqliteConnectionFactory = sqliteConnectionFactory;
         }
 
         #endregion
@@ -26,7 +29,7 @@ namespace Planday.Schedule.Infrastructure.Queries
 
         public async Task<Employee?> QueryAsync(long id)
         {
-            using var sqlConnection = new SQLiteConnection(_connectionStringProvider.GetConnectiongString());
+            using var sqlConnection = sqliteConnectionFactory.GetSqliteConnection(connectionStringProvider.GetConnectiongString());
 
             var queryParams = new { Id = id };
 
@@ -46,7 +49,7 @@ namespace Planday.Schedule.Infrastructure.Queries
 
         #region DTOs
 
-        private record EmployeeDto (long Id, string Name);
+        private record EmployeeDto(long Id, string Name);
 
         #endregion
 

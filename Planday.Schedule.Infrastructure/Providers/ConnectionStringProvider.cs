@@ -5,18 +5,31 @@ namespace Planday.Schedule.Infrastructure.Providers
 {
     public class ConnectionStringProvider : IConnectionStringProvider
     {
+        #region Private Members
+
         private readonly string _connectionString;
 
-    
+        #endregion
+
+        #region Ctor
+
         public ConnectionStringProvider(string connectionString)
         {
             _connectionString = ProcessConnectionString(connectionString);
         }
 
+        #endregion
+
+        #region Public Methods
+
         public string GetConnectiongString()
         {
             return _connectionString;
         }
+
+        #endregion
+
+        #region Private Methods
 
         private static string ProcessConnectionString(string connectionString)
         {
@@ -27,6 +40,8 @@ namespace Planday.Schedule.Infrastructure.Providers
                 pattern,
                 $"$1{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, match.Groups[2].Value)}$3");
         }
-    }    
+
+        #endregion
+    }
 }
 

@@ -51,7 +51,6 @@ namespace Planday.Schedule.Api.Controllers
             if (shift is null)
             {
                 // logger Error into the logger
-
                 return NotFound(new NotFoundResponse
                 {
                     StatusCode = (int)HttpStatusCode.NotFound,
