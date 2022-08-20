@@ -7,6 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Planday.Schedule.Models\Planday.Schedule.Models.csproj" />
+      <ProjectReference Include="..\Planday.Schedule.Services.ApiClient\Planday.Schedule.Services.ApiClient.csproj" />
       <ProjectReference Include="..\Planday.Schedule\Planday.Schedule.csproj" />
     </ItemGroup>
 

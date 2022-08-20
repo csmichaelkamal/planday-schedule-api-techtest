@@ -12,6 +12,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Planday.Schedule.Infrastructure\Planday.Schedule.Infrastructure.csproj" />
+      <ProjectReference Include="..\Planday.Schedule.Models\Planday.Schedule.Models.csproj" />
+      <ProjectReference Include="..\Planday.Schedule.Services.ApiClient\Planday.Schedule.Services.ApiClient.csproj" />
     </ItemGroup>
 
 </Project>

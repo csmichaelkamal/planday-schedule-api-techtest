@@ -14,6 +14,6 @@
         public long? EmployeeId { get; }
         public DateTime Start { get; }
         public DateTime End { get; }
-    }    
+    }
 }
 
