@@ -5,7 +5,9 @@ using Planday.Schedule.Infrastructure.Factories.Interfaces;
 using Planday.Schedule.Infrastructure.Providers;
 using Planday.Schedule.Infrastructure.Providers.Interfaces;
 using Planday.Schedule.Infrastructure.Queries;
+using Planday.Schedule.Infrastructure.Services;
 using Planday.Schedule.Queries;
+using Planday.Schedule.Services.ApiClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,12 +22,19 @@ builder.Services.AddSingleton<IConnectionStringProvider>(new ConnectionStringPro
 
 builder.Services.AddScoped<ISqliteConnectionFactory, SqliteConnectionFactory>();
 // builder.Services.AddScoped(config => new ShiftQueryBase(config.GetService<IConnectionStringProvider>()));
+builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
+
+// First Party Service
+builder.Services.AddScoped<IApiClient>(implFactory => new ApiClient(implFactory.GetRequiredService<HttpClient>(),
+    "http://20.101.230.231:5000/", "8e0ac353-5ef1-4128-9687-fb9eb8647288"));
 
 // Register Queries
 builder.Services.AddScoped<IGetAllShiftsQuery, GetAllShiftsQuery>();
 builder.Services.AddScoped<IGetShiftByIdQuery, GetShiftByIdQuery>();
 builder.Services.AddScoped<IGetEmployeeByIdQuery, GetEmployeeByIdQuery>();
 builder.Services.AddScoped<IGetEmployeeShiftQuery, GetEmployeeShiftQuery>();
+builder.Services.AddScoped<IShiftQueryWithEmployee, ShiftQueryWithEmployee>();
 
 // Register Commands
 builder.Services.AddScoped<ICreateOpenShiftCommand, CreateOpenShiftCommand>();

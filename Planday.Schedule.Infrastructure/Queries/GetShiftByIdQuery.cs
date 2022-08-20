@@ -29,7 +29,7 @@ namespace Planday.Schedule.Infrastructure.Queries
 
         public async Task<Shift?> QueryAsync(long id)
         {
-            using var sqlConnection =  sqliteConnectionFactory.GetSqliteConnection(connectionStringProvider.GetConnectiongString());
+            using var sqlConnection = sqliteConnectionFactory.GetSqliteConnection(connectionStringProvider.GetConnectiongString());
 
             var idParam = new { Id = id };
 
@@ -41,12 +41,10 @@ namespace Planday.Schedule.Infrastructure.Queries
             }
 
             // We should use a Entity Mapper here, like AutoMapper
-            var shift = new Shift(shiftDto.Id,
-                                  shiftDto.EmployeeId,
-                                  DateTime.Parse(shiftDto.Start),
-                                  DateTime.Parse(shiftDto.End));
-
-            return shift;
+            return new Shift(shiftDto.Id,
+                shiftDto.EmployeeId,
+                DateTime.Parse(shiftDto.Start),
+                DateTime.Parse(shiftDto.End));
         }
 
         #endregion

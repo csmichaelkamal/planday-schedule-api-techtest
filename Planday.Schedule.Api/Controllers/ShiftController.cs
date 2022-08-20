@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Planday.Schedule.Api.Models.Request;
 using Planday.Schedule.Commands;
 using Planday.Schedule.Infrastructure.Responses;
-using Planday.Schedule.Queries;
+using Planday.Schedule.Infrastructure.Services;
 using System.Net;
 
 namespace Planday.Schedule.Api.Controllers
@@ -13,21 +13,21 @@ namespace Planday.Schedule.Api.Controllers
     {
         #region Members
 
-        private readonly IGetShiftByIdQuery _getShiftByIdQuery;
-        private readonly ICreateOpenShiftCommand _createOpenShiftCommand;
-        private readonly IAssignShiftToEmployeeCommand _assignShiftToEmployeeCommand;
+        private readonly IShiftQueryWithEmployee shiftQueryWithEmployee;
+        private readonly ICreateOpenShiftCommand createOpenShiftCommand;
+        private readonly IAssignShiftToEmployeeCommand assignShiftToEmployeeCommand;
 
         #endregion
 
         #region Ctor
 
-        public ShiftController(IGetShiftByIdQuery getShiftByIdQuery,
+        public ShiftController(IShiftQueryWithEmployee shiftQueryWithEmployee,
             ICreateOpenShiftCommand createOpenShiftCommand,
             IAssignShiftToEmployeeCommand assignShiftToEmployeeCommand)
         {
-            _getShiftByIdQuery = getShiftByIdQuery;
-            _createOpenShiftCommand = createOpenShiftCommand;
-            _assignShiftToEmployeeCommand = assignShiftToEmployeeCommand;
+            this.shiftQueryWithEmployee = shiftQueryWithEmployee;
+            this.createOpenShiftCommand = createOpenShiftCommand;
+            this.assignShiftToEmployeeCommand = assignShiftToEmployeeCommand;
         }
 
         #endregion
@@ -42,11 +42,11 @@ namespace Planday.Schedule.Api.Controllers
         /// <param name="id"></param>
         /// <returns>The Shift by the supplied id if found, otherwise returns NotFound (404)</returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Shift), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ShiftEmployee), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(NotFoundResponse), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetShiftById(long id)
         {
-            var shift = await _getShiftByIdQuery.QueryAsync(id);
+            var shift = await shiftQueryWithEmployee.GetShiftWithEmployeeData(id);
 
             if (shift is null)
             {
@@ -75,7 +75,7 @@ namespace Planday.Schedule.Api.Controllers
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateOpenShift(OpenShiftRequestModel openShiftRequestModel)
         {
-            var insertedId = await _createOpenShiftCommand.CreateOpenShiftAsync(openShiftRequestModel.StartDate,
+            var insertedId = await createOpenShiftCommand.CreateOpenShiftAsync(openShiftRequestModel.StartDate,
                 openShiftRequestModel.EndDate);
 
             if (insertedId is 0)
@@ -96,7 +96,7 @@ namespace Planday.Schedule.Api.Controllers
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AssignShiftToEmployee(AssignShiftToEmployeeRequestModel assignShiftToEmployeeRequestModel)
         {
-            var assingStatus = await _assignShiftToEmployeeCommand.
+            var assingStatus = await assignShiftToEmployeeCommand.
                 AssignShiftToEmployeeAsync(assignShiftToEmployeeRequestModel.ShiftId, assignShiftToEmployeeRequestModel.EmployeeId);
 
             if (!assingStatus)
