@@ -35,13 +35,9 @@ namespace Planday.Schedule.Infrastructure.Queries
 
             var shiftDto = await sqlConnection.QueryFirstOrDefaultAsync<ShiftDto>(Sql, idParam);
 
-            if (shiftDto is null)
-            {
-                return null;
-            }
-
             // We should use a Entity Mapper here, like AutoMapper
-            return new Shift(shiftDto.Id,
+
+            return shiftDto is null ? null : new Shift(shiftDto.Id,
                 shiftDto.EmployeeId,
                 DateTime.Parse(shiftDto.Start),
                 DateTime.Parse(shiftDto.End));
