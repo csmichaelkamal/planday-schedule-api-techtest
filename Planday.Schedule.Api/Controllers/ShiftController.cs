@@ -8,7 +8,8 @@ using System.Net;
 namespace Planday.Schedule.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ShiftController : ControllerBase
     {
         #region Members
@@ -16,6 +17,7 @@ namespace Planday.Schedule.Api.Controllers
         private readonly IShiftQueryWithEmployee shiftQueryWithEmployee;
         private readonly ICreateOpenShiftCommand createOpenShiftCommand;
         private readonly IAssignShiftToEmployeeCommand assignShiftToEmployeeCommand;
+        private readonly ILogger<ShiftController> logger;
 
         #endregion
 
@@ -23,11 +25,13 @@ namespace Planday.Schedule.Api.Controllers
 
         public ShiftController(IShiftQueryWithEmployee shiftQueryWithEmployee,
             ICreateOpenShiftCommand createOpenShiftCommand,
-            IAssignShiftToEmployeeCommand assignShiftToEmployeeCommand)
+            IAssignShiftToEmployeeCommand assignShiftToEmployeeCommand,
+            ILogger<ShiftController> logger)
         {
             this.shiftQueryWithEmployee = shiftQueryWithEmployee;
             this.createOpenShiftCommand = createOpenShiftCommand;
             this.assignShiftToEmployeeCommand = assignShiftToEmployeeCommand;
+            this.logger = logger;
         }
 
         #endregion
@@ -50,7 +54,7 @@ namespace Planday.Schedule.Api.Controllers
 
             if (shift is null)
             {
-                // logger Error into the logger
+                logger.LogError($"shift with id: {id} couldn't be found!");
                 return NotFound(new NotFoundResponse
                 {
                     StatusCode = (int)HttpStatusCode.NotFound,
@@ -58,6 +62,7 @@ namespace Planday.Schedule.Api.Controllers
                 });
             }
 
+            logger.LogInformation($"Shift with Id {id} has been found!");
             return Ok(shift);
         }
 
@@ -80,10 +85,11 @@ namespace Planday.Schedule.Api.Controllers
 
             if (insertedId is 0)
             {
-                // logger Error into the logger
+                logger.LogCritical("Error while adding the open shift, please try again!");
                 return BadRequest();
             }
 
+            logger.LogInformation($"Open Shift was added successfully, Open Shift Id is {insertedId}!");
             return CreatedAtAction(nameof(GetShiftById), new { id = insertedId }, insertedId);
         }
 
@@ -101,11 +107,13 @@ namespace Planday.Schedule.Api.Controllers
 
             if (!assingStatus)
             {
-                // logger Error into the logger
-                // Cannot Assign the Shift with Id = ShiftId to the Employee with Id = EmployeeId
+                logger.LogError($"Cannot Assign the Shift with Id = {assignShiftToEmployeeRequestModel.ShiftId} " +
+                    $"to the Employee with Id = {assignShiftToEmployeeRequestModel.EmployeeId}");
                 return BadRequest();
             }
 
+            logger.LogInformation($"Shift with Id {assignShiftToEmployeeRequestModel.ShiftId} has been successfully assigned to" +
+                $"Employee with Id {assignShiftToEmployeeRequestModel.EmployeeId}");
             return NoContent();
         }
 

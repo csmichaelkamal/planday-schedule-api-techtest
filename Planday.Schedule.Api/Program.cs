@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Planday.Schedule.Commands;
 using Planday.Schedule.Infrastructure.Commands;
 using Planday.Schedule.Infrastructure.Factories;
@@ -15,13 +16,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddApiVersioning(config =>
+{
+    config.DefaultApiVersion = new ApiVersion(majorVersion: 1, minorVersion: 0);
+    config.AssumeDefaultVersionWhenUnspecified = true;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddLogging(config =>
+{
+    config.AddConsole();
+});
 builder.Services.AddSingleton<IConnectionStringProvider>(new ConnectionStringProvider(builder.Configuration.GetConnectionString("Database")));
 
 builder.Services.AddScoped<ISqliteConnectionFactory, SqliteConnectionFactory>();
-// builder.Services.AddScoped(config => new ShiftQueryBase(config.GetService<IConnectionStringProvider>()));
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 

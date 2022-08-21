@@ -1,11 +1,12 @@
 #region Usings
 
-using Dapper;
 using FluentAssertions;
 using Moq;
 using Planday.Schedule.Infrastructure.Factories.Interfaces;
+using Planday.Schedule.Infrastructure.Providers;
 using Planday.Schedule.Infrastructure.Providers.Interfaces;
 using Planday.Schedule.Infrastructure.Queries;
+using Planday.Schedule.Infrastructure.Tests.Services;
 using Planday.Schedule.Queries;
 using System.Data;
 using System.Data.SQLite;
@@ -18,10 +19,14 @@ namespace Planday.Schedule.Infrastructure.Tests.Queries
     {
         #region Private Members
 
-        private readonly Mock<IConnectionStringProvider> connectionStringProvider;
+        private readonly IConnectionStringProvider connectionStringProvider;
         private readonly Mock<ISqliteConnectionFactory> sqliteConnectionFactory;
         private readonly IGetShiftByIdQuery getShiftByIdQuery;
+
         private SQLiteConnection sqliteConnection;
+
+        private static readonly int[] ValidShiftIds = new int[] { 1, 2 };
+        private static readonly int[] InvalidShiftIds = new int[] { 3, 4 };
 
         #endregion
 
@@ -29,9 +34,9 @@ namespace Planday.Schedule.Infrastructure.Tests.Queries
 
         public GetShiftByIdQueryTests()
         {
-            connectionStringProvider = new Mock<IConnectionStringProvider>();
+            connectionStringProvider = new ConnectionStringProvider("DataSource=:memory:");
             sqliteConnectionFactory = new Mock<ISqliteConnectionFactory>();
-            getShiftByIdQuery = new GetShiftByIdQuery(connectionStringProvider.Object,
+            getShiftByIdQuery = new GetShiftByIdQuery(connectionStringProvider,
                 sqliteConnectionFactory.Object);
         }
 
@@ -42,36 +47,82 @@ namespace Planday.Schedule.Infrastructure.Tests.Queries
         [SetUp]
         public async Task Setup()
         {
-            connectionStringProvider
-                .Setup(csp => csp.GetConnectiongString())
-                .Returns("DataSource=:memory:");
-
-            sqliteConnection = new SQLiteConnection();
-
+            sqliteConnection = new SQLiteConnection("DataSource=:memory:");
             sqliteConnectionFactory.Setup(scf =>
-            scf.GetSqliteConnection(connectionStringProvider.Object.GetConnectiongString()))
+            scf.GetSqliteConnection(connectionStringProvider.GetConnectiongString()))
                 .Returns(sqliteConnection);
+
+            await DatabaseCreationHelper.CreateDatabase(sqliteConnection);
         }
 
         #endregion
 
-        #region GetShiftByIdQuer Tests
+        #region GetShiftByIdQuery Tests
+
+        #region Valid Shift Ids
 
         [Test]
-        [Category("GetShiftByIdQuery_QueryAsync")]
-        public async Task GetShiftByIdQuery_QueryAsync_Id()
+        [Category("GetShiftByIdQuery_QueryAsync_Valid")]
+        [TestCaseSource(nameof(ValidShiftIds))]
+        public async Task GetShiftByIdQuery_CallQueryAsyncWithValidId_ShiftShouldNotBeNull(int id)
         {
-            var queryResult = await getShiftByIdQuery.QueryAsync(1);
+            // Arrange
+            // Act           
+            var queryResult = await getShiftByIdQuery.QueryAsync(id);
 
+            // Assert
             queryResult.Should().NotBeNull();
         }
 
+        [Test]
+        [Category("GetShiftByIdQuery_QueryAsync_Valid")]
+        [TestCaseSource(nameof(ValidShiftIds))]
+        public async Task GetShiftByIdQuery_CallQueryAsyncWithValidId_ShouldReturnValidShift(int id)
+        {
+            // Arrange
+            // Act           
+            var queryResult = await getShiftByIdQuery.QueryAsync(id);
+
+            // Assert
+            queryResult?.Id.Should().Be(id);
+            queryResult?.Start.Should().NotBe(null);
+            queryResult?.End.Should().NotBe(null);
+
+            queryResult.Should().BeOfType(typeof(Shift));
+        }
+
+        [Test]
+        [Category("GetShiftByIdQuery_QueryAsync_Valid")]
+        [TestCaseSource(nameof(ValidShiftIds))]
+        public async Task GetShiftByIdQuery_CallQueryAsyncWithValidId_StartAndEndDatesShouldBeOnSameDay(int id)
+        {
+            // Arrange
+            // Act           
+            var queryResult = await getShiftByIdQuery.QueryAsync(id);
+
+            // Assert
+            queryResult?.Start.ToShortDateString().Should().Be(queryResult?.End.ToShortDateString());
+        }
+
         #endregion
-    }
 
-    public class ShiftDto
-    {
-        public int Id { get; set; }
+        #region Invalid Shift Ids
 
+        [Test]
+        [Category("GetShiftByIdQuery_QueryAsync_Invalid")]
+        [TestCaseSource(nameof(InvalidShiftIds))]
+        public async Task GetShiftByIdQuery_CallQueryAsyncWithInvalidId_ShiftShouldBeNull(int id)
+        {
+            // Arrange
+            // Act           
+            var queryResult = await getShiftByIdQuery.QueryAsync(id);
+
+            // Assert
+            queryResult.Should().BeNull();
+        }
+
+        #endregion
+
+        #endregion
     }
 }
