@@ -1,6 +1,6 @@
 ﻿using System.Data.SQLite;
 
-namespace Planday.Schedule.Infrastructure.Tests.Services
+namespace Planday.Schedule.Infrastructure.Tests.Helper
 {
     public static class DatabaseCreationHelper
     {

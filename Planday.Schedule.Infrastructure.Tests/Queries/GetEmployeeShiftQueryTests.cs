@@ -4,7 +4,7 @@ using Planday.Schedule.Infrastructure.Factories.Interfaces;
 using Planday.Schedule.Infrastructure.Providers;
 using Planday.Schedule.Infrastructure.Providers.Interfaces;
 using Planday.Schedule.Infrastructure.Queries;
-using Planday.Schedule.Infrastructure.Tests.Services;
+using Planday.Schedule.Infrastructure.Tests.Helper;
 using Planday.Schedule.Queries;
 using System.Data.SQLite;
 
